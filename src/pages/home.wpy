@@ -1,0 +1,84 @@
+<style lang="less">
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+</style>
+<template>
+  <view class="container">
+    {{message}}
+    <button class="zan-btn zan-btn--large">跳转</button>
+    <open-data type="userAvatarUrl"></open-data>
+    <open-data type="userNickName"></open-data>
+    <!-- 需要使用 button 来授权登录 -->
+    <button wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权登录</button>
+    <view wx:else>请升级微信版本</view>
+    <button open-type="openSetting">打开授权设置页</button>
+
+    <view bindtap="urlbind"> asdasd </view>
+    <br />
+    <br />
+    <br />
+    <button open-type='contact' session-from="{{kefuid}}">联系客服</button>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Home extends wepy.page {
+  config = {
+    navigationBarTitleText: '首页'
+  }
+  data = {
+    message: 'Hello Logs!',
+    canIUse: wepy.canIUse('button.open-type.getUserInfo'),
+    kefuid:'huanglei173'
+  }
+  methods = {
+    urlbind() {
+      wepy.navigateTo({
+        'url': './shop/details',
+        success: function (res) {
+          console.log('跳转到news页面成功')// success
+        },
+        fail: function (res) {
+          console.log(res)  // fail
+        },
+        complete: function () {
+          console.log('跳转到news页面完成') // complete
+        }
+      })
+    },
+    bindGetUserInfo: function (e) {
+      console.log(e.detail)
+    }
+  }
+  onLoad() {
+    // 查看是否授权
+    wepy.getSetting({
+      success: function (res) {
+        if (res.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+          wepy.getUserInfo({
+            success: function (res) {
+
+            }
+          })
+        }
+      }
+    })
+  }
+}
+</script>

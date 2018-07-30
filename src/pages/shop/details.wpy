@@ -1,0 +1,538 @@
+<style lang="less">
+.foot-absolute {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}
+.foot-absolute .zan-row {
+  text-align: center;
+  background: white;
+}
+.foot-absolute .zan-row .zan-col {
+  height: 100rpx;
+}
+.zan-col-8 {
+  line-height: 100rpx;
+  font-size: 32rpx;
+}
+.zan-col-4 {
+  color: #666;
+  padding-top: 5px;
+}
+.zan-col-5 .zan-icon {
+  font-size: 40rpx;
+}
+.slide-image {
+  width: 100%;
+  height: 150px;
+}
+.deta_middle {
+  width: 94%;
+  padding: 16rpx 30rpx;
+}
+.d_m_t {
+  font-size: 28rpx;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.zan-col-10,
+.zan-col-4 {
+  font-size: 32rpx;
+  height: 40px;
+  position: relative;
+}
+.d_m_p {
+  font-size: 54rpx;
+}
+.d_m_p_f {
+  font-size: 24rpx;
+  color: #999;
+  margin: 3px 0 0 5px;
+  position: relative;
+}
+.d_m_p_f p {
+  position: absolute;
+  bottom: 4px;
+  padding: 0px;
+  margin: 0px;
+  text-decoration: line-through;
+}
+.d_h {
+  position: absolute;
+  margin: 0px;
+  bottom: 0px;
+  padding: 0px;
+}
+.data_remark {
+  margin-top: 10px;
+  background: #f5f5f5;
+  border-radius: 3px;
+  padding: 5px 10px;
+}
+.dmx view {
+  height: 20px;
+  font-size: 10px;
+  line-height: 20px;
+}
+.dmx .zan-icon {
+  color: red;
+  padding: 0 5px;
+}
+.popup__content {
+  width: 100%;
+  background: #ffffff;
+}
+.proup_list {
+  padding: 20px;
+}
+.proup_title {
+  text-align: center;
+  color: #999;
+}
+.proup_list view {
+  height: 30px;
+  line-height: 30px;
+}
+swiper image {
+  width: 100%;
+}
+.wrap {
+  display: block;
+  height: 100rpx;
+}
+.item {
+  font-size: 28rpx;
+  line-height: 100rpx;
+}
+.side {
+  width: 80rpx;
+  flex-grow: 0;
+}
+.main {
+  flex-grow: 1;
+  padding-left: 30rpx;
+}
+.g_p_h {
+  width: 100%;
+  display: flex;
+  height: 210rpx;
+}
+.g_p_img {
+  width: 250rpx;
+  position: relative;
+}
+.g_p_img image {
+  width: 230rpx;
+  height: 250rpx;
+}
+.g_p_title {
+  flex-grow: 1;
+  padding-top: 40rpx;
+}
+.g_p_value {
+  height: 40rpx;
+  line-height: 40rpx;
+  font-size: 24rpx;
+}
+.flexItem {
+  border: 1px solid #999;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 24rpx;
+  margin: 5px 10px 5px 0;
+}
+.biaoti {
+  margin: 10rpx;
+  font-size: 24rpx;
+}
+.proup_button {
+  height: 100rpx;
+  width: 100%;
+  background: red;
+  line-height: 100rpx;
+  text-align: center;
+  color: white;
+}
+.x_cb {
+  display: flex;
+  word-wrap: break-word;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+.icon-image {
+  width: 50rpx;
+  height: 50rpx;
+  display: inline-block;
+}
+.cart_bage {
+  position: absolute;
+  top: -16rpx;
+}
+</style>
+<template>
+  <view class="container">
+    <view style="width:100%;display:block;">
+      <swiper indicator-dots="{{indicatorDots}}" style="height:262px" autoplay="{{autoplay}}" interval="{{interval}}" bindchange="swichange" previous-margin="{{pmargin}}" next-margin="{{nmargin}}" duration="{{duration}}">
+        <block wx:for="{{ximg}}" wx:key="item.id" wx:for-item="item">
+          <swiper-item style="padding-right:15rpx;">
+            <image src="{{item.img_url}}" mode="widthFix" bindload='imgHeight' class="slide-image" />
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+
+    <view class="deta_middle">
+      <view class="d_m_t">{{dv.g_name}}</view>
+      <view class="zan-row size16">
+        <view class="zan-col zan-col-10" style="display:flex;">
+          <view>¥
+            <span class="size30">{{dv.g_sales_price}}</span>
+          </view>
+          <view class="d_m_p_f">
+            <p>¥{{dv.g_original_price}}</p>
+          </view>
+        </view>
+        <view class="zan-col zan-col-10" style="position:relative;">
+          <view class="size14 d_h">销量:{{dv.g_stocks}}</view>
+        </view>
+        <view class="zan-col zan-col-4" style="position:relative;">
+          <view class="d_h">分享</view>
+        </view>
+      </view>
+
+      <view class="data_remark" data-type="M" bindtap="showPopup">
+        <view class="zan-row size16">
+          <view class="zan-col zan-col-20 dmx">
+            <view style="display:flex;">
+              <view>
+                <image src="../../common/images/wx-img.png" style="width:20px;height:20px;">
+              </view>
+              <view style="margin-left:3px;font-size:24rpx;">微信 · 小店微商城</view>
+            </view>
+            <view>
+              <span style="margin-left:3px;">
+                <span class="zan-icon zan-icon-passed"></span>7天无理由退货</span>
+              <span style="margin-left:20px;">
+                <span class="zan-icon zan-icon-passed"></span>72小时发货</span>
+            </view>
+          </view>
+          <view class="zan-col zan-col-4" style="line-height:40px;text-align:right;">
+            <wxc-icon size="30" type="arrow-right"></wxc-icon>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="v-interval"></view>
+
+    <view style="width:100%;display:flex;" data-type="D" bindtap="showPopup">
+      <!-- <wxc-flex class="wrap">-->
+      <view class="item main">请选择:颜色 尺码</view>
+      <view class="item side">
+        <wxc-icon size="30" type="arrow-right"></wxc-icon>
+      </view>
+      <!-- </wxc-flex> -->
+    </view>
+
+    <view class="v-interval"></view>
+
+    <view wx:for="{{imglist}}" wx:for-item="item" wx:key="{{item.id}}">
+      <image src="{{item.imagex}}" data-imageurl="{{item.imagex}}" bindload="imageLoad" data-index="{{ index }}" style="width:{{ imglist[index].width }}rpx; height:{{ imglist[index].height }}rpx;" />
+    </view>
+
+    <view class="v-interval"></view>
+    <view class="foot-absolute">
+      <view class="zan-row">
+        <view class="zan-col zan-col-4">
+          <view class="zan-icon zan-icon-chat size18"></view>
+          <view class="size12">卖家</view>
+        </view>
+        <view class="zan-col zan-col-4">
+
+          <view style="position: relative;">
+            <view class="zan-icon zan-icon-cart size18"></view>
+            <wxc-badge class="cart_bage">9</wxc-badge>
+            <view class="size12">购物车</view>
+          </view>
+
+        </view>
+        <view class="zan-col zan-col-8 bg-FF8000">
+          <view>加入购物车</view>
+        </view>
+        <view class="zan-col zan-col-8 bg-FF0000">
+          <view>立即购买</view>
+        </view>
+      </view>
+    </view>
+
+    <view>
+      <wxc-loading is-show="{{loading.isShow}}" image="https://s10.mogucdn.com/mlcdn/c45406/170607_5241335cb37ka3ab7781ddh504ggh_200x200.png" slip="http://s10.mogucdn.com/p1/160715/upload_ifrgmmzwmyydknldhezdambqmeyde_200x200.png"></wxc-loading>
+      <wxc-popup class="J_Popup" locked="hide" animation-mode="bottom" align="bottom">
+        <view class="popup__content" style="display:{{ dispM ? 'block' : 'none'}}">
+          <view class="proup_list">
+            <view class="proup_title">服务说明</view>
+            <view class="proup_value">7天无理由退货</view>
+            <view class="proup_value">72小时发货</view>
+          </view>
+        </view>
+        <view style="background:white;width:100%;display:{{ dispD ? 'block' : 'none'}}">
+          <view style="padding:0 20px 0 20px;">
+            <view class="g_p_h">
+              <view class="g_p_img">
+                <view style="position: absolute;top:-40rpx;">
+                  <image src="../../common/images/77.jpg">
+                </view>
+              </view>
+              <view class="g_p_title">
+                <view>¥
+                  <span class="size30">90.90</span>
+                </view>
+                <view class="g_p_value">库存1200件</view>
+                <view class="g_p_value">请选择:尺码</view>
+              </view>
+            </view>
+            <view class="biaoti">颜色:</view>
+            <view class="x_cb">
+              <block wx:for="{{colorList}}" wx:key="{{index}}">
+                <view class="flexItem">{{item.colorName}}</view>
+              </block>
+            </view>
+
+            <view class="biaoti">尺码:</view>
+            <view class="x_cb">
+              <block wx:for="{{chimaList}}" wx:key="{{index}}">
+                <view class="flexItem">{{item.chimaName}}</view>
+              </block>
+            </view>
+            <view>
+              <view class="biaoti">数量:</view>
+              <view style="margin-bottom:20rpx;">
+                <wxc-counter number="1" max="{{10000}}" min="1" bind:changenumber="onChangeNumber"></wxc-counter>
+              </view>
+            </view>
+          </view>
+          <view class="proup_button">确认</view>
+        </view>
+      </wxc-popup>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class Details extends wepy.page {
+  config = {
+    navigationBarTitleText: '商品详情',
+    usingComponents: {
+      'wxc-loading': '../../packages/@minui/wxc-loading/dist/index',
+      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
+      'wxc-popup': '../../packages/@minui/wxc-popup/dist/index',
+      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
+      'wxc-counter': '../../packages/@minui/wxc-counter/dist/index',
+      'wxc-badge': '../../packages/@minui/wxc-badge/dist/index'
+    }
+  }
+  data = {
+    height: '',
+    imgServer: null,
+    pmargin: '0px',
+    nmargin: '160rpx',
+    message: '明细!',
+    dv: {
+      'id': 1,
+      'g_code': '123456789',
+      'g_typename': '女装内衣',
+      'g_type': 1,
+      'g_name': '2018春夏女装网纱拼接半身裙中长款新款韩版高腰白搭学生显瘦破洞牛仔中裙潮流',
+      'g_detail': 0,
+      'g_original_price': 200.00,
+      'g_sales_price': 100.00,
+      'g_discount_rate': 50.00,
+      'g_stocks': 200,
+      'g_t_img': 'http://localhost:7788/images/top1/111111.jpg',
+      'isenabled': true,
+      'isoder': 1
+    },
+    imglist: [{
+      id: 1,
+      imagex: '555.jpg'
+    }, {
+      id: 2,
+      imagex: '444.jpg'
+    }, {
+      id: 3,
+      imagex: '333.jpg'
+    }, {
+      id: 4,
+      imagex: '222.jpg'
+    }, {
+      id: 5,
+      imagex: '111.jpg'
+    }, {
+      id: 7,
+      imagex: '99.jpg'
+    }, {
+      id: 8,
+      imagex: '88.jpg'
+    }, {
+      id: 9,
+      imagex: '888.jpg'
+    }, {
+      id: 10,
+      imagex: '66.jpg'
+    }],
+    ximg: [{
+      'id': 1,
+      'g_id': 1,
+      'img_type': 1,
+      'img_url': 'qwe.jpg',
+      'isoder': 1,
+      'remark': null
+    }, {
+      'id': 2,
+      'g_id': 1,
+      'img_type': 1,
+      'img_url': '999.jpg',
+      'isoder': 2,
+      'remark': null
+    }, {
+      'id': 3,
+      'g_id': 1,
+      'img_type': 1,
+      'img_url': '777.jpg',
+      'isoder': 3,
+      'remark': null
+    }, {
+      'id': 4,
+      'g_id': 1,
+      'img_type': 1,
+      'img_url': '666.jpg',
+      'isoder': 4,
+      'remark': null
+    }],
+    colorList: [{
+      'colorId': 1,
+      'colorName': '蓝色破洞'
+    }, {
+      'colorId': 2,
+      'colorName': '蓝色不破洞'
+    }, {
+      'colorId': 1,
+      'colorName': '蓝色破洞'
+    }, {
+      'colorId': 2,
+      'colorName': '蓝色不破洞'
+    }, {
+      'colorId': 1,
+      'colorName': '蓝色破洞'
+    }, {
+      'colorId': 2,
+      'colorName': '蓝色不破洞'
+    }],
+    chimaList: [{
+      chimaName: 'XS'
+    }, {
+      chimaName: 'S'
+    }, {
+      chimaName: 'M'
+    }, {
+      chimaName: 'L'
+    }, {
+      chimaName: 'XL'
+    }, {
+      chimaName: '2XL'
+    }],
+    bimg: [],
+    indicatorDots: false,
+    autoplay: false,
+    duration: 500,
+    dispM: false,
+    dispD: false
+  }
+  methods = {
+    swichange(e) {
+      let that = this
+      if (e.detail.current > 0) {
+        that.pmargin = '70rpx'
+        that.nmargin = '70rpx'
+      }
+      if (e.detail.current === that.ximg.length - 1) {
+        that.pmargin = '160rpx'
+        that.nmargin = '0px'
+      }
+      if (e.detail.current === 0) {
+        that.pmargin = '0px'
+      }
+      this.$apply()
+    },
+    showPopup(e) {
+      let that = this
+      if (e.currentTarget.dataset.type === 'M') {
+        that.dispM = true
+        that.dispD = false
+      } else {
+        that.dispM = false
+        that.dispD = true
+      }
+      that.$apply()
+      let popupComponent = this.$wxpage.selectComponent('.J_Popup')
+      popupComponent && popupComponent.show()
+    },
+    hidePopup() {
+      let popupComponent = this.$wxpage.selectComponent('.J_Popup')
+      popupComponent && popupComponent.hide()
+    }
+  }
+
+  imageLoad(e) {
+    let $width = e.detail.width
+    let $height = e.detail.height
+    let ratio = $width / $height
+    let viewWidth = 718
+    let viewHeight = 718 / ratio
+    let image = this.imglist
+    image[e.target.dataset.index] = {
+      width: viewWidth,
+      height: viewHeight,
+      imagex: e.target.dataset.imageurl
+    }
+    this.imglist = image
+    this.$apply()
+  }
+  imgHeight(e) {
+    console.log(e)
+    var winWid = wepy.getSystemInfoSync().windowWidth
+    console.log(winWid)
+    var imgh = e.detail.height
+    var imgw = e.detail.width
+    var swiperH = winWid * imgh / imgw
+    this.height = swiperH
+  }
+  onLoad(options) {
+    let self = this
+    this.imgServer = this.$parent.globalData.imgServer
+    console.log(this.imgServer)
+    self.ximg = self.ximg.filter(function (t) {
+      t.img_url = self.imgServer + t.img_url
+    })
+    self.imglist = self.imglist.filter(function (t) {
+      t.imagex = self.imgServer + t.imagex
+    })
+    console.log(self.imglist)
+    // this.$parent.getGet('http://localhost:64193/api/V_Xhc_Goods_item/RequestGoodDtl/', {id: options.gid}).then(
+    //       function(res) {
+    //         self.dv = res.goodsdtl[0]
+    //         console.log(res.goodsdtl[0])
+    //         self.ximg = res.ximg.filter(function(t) {
+    //           return t.img_type === 1
+    //         })
+    //         self.bimg = res.ximg.filter(function(t) {
+    //           return t.img_type === 2
+    //         })
+    //         self.$apply()
+    //       }).catch(function(errMsg) {
+    //         console.log(errMsg)
+    //       }
+    //     )
+  }
+}
+</script>

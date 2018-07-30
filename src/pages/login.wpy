@@ -1,0 +1,50 @@
+<style lang="less">
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+</style>
+<template>
+    <view class="container">
+        {{message}}
+        <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">获取用户信息</button>
+        <button bindtap="getproduct">调用</button>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Login extends wepy.page {
+    config = {
+        navigationBarTitleText: 'login'
+    }
+    data = {
+        message: 'Hello Logs!'
+    }
+    methods = {
+        onGotUserInfo(e) {
+           this.$parent.login(e.detail)
+        },
+        getproduct(){
+            var params = {
+                openid : wepy.getStorageSync('user_info')
+            }
+            this.$parent.getPostS('Product/PostXX/',params,function(response){
+                console.log(response)
+            }, true)
+        }
+    }
+}
+</script>

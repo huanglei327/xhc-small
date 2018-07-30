@@ -1,0 +1,162 @@
+<style lang="less">
+.search-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 90rpx;
+  color: #fff;
+  background: #f6f6f6;
+  border-bottom: 1px solid #efefef;
+}
+.search-location {
+  height: 90rpx;
+  line-height: 90rpx;
+  margin-left: 22rpx;
+  font-size: 26rpx;
+  overflow: hidden;
+}
+.search {
+  flex-grow: 1;
+  margin: 15rpx 24rpx;
+}
+.search-icon {
+  width: 44rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  margin-right: 22rpx;
+}
+.wrap {
+  display: block;
+  height: 60rpx;
+  margin-top: 24rpx;
+}
+.item {
+  font-size: 24rpx;
+  line-height: 60rpx;
+}
+.side {
+  width: 82%;
+  flex-grow: 0;
+  margin-left: 30rpx;
+}
+.main {
+  flex-grow: 1;
+}
+.v-s-l {
+  padding: 10rpx 20rpx;
+  background: #f6f6f6;
+  margin: 4px 0 4px 10px;
+  height: 48rpx;
+  line-height: 48rpx;
+  border-radius: 6rpx;
+  max-width: 50%;
+  overflow: hidden;
+}
+</style>
+<template>
+  <view>
+    <view class="g_search">
+      <view class="search-wrap">
+        <wxc-search class="search" maxlength="10" show-icon="false" bg-color="white" color="#balck" ph-color="#999" button="搜索" btn-color="black" placeholder="{{srarchValue}}" bind:confirm="onConfirm" bind:input="onInput"></wxc-search>
+      </view>
+    </view>
+    <wxc-flex class="wrap">
+      <view class="item side">历史记录</view>
+      <view class="item main" bindtop="cleanSearchStore">
+        <text bindtap="removeSearchStore">清空</text>
+      </view>
+    </wxc-flex>
+    <wxc-flex class="wrap" wrap="wrap">
+      <view class="item v-s-l" wx:for="{{searchList}}">
+        {{item.searchvalue}}
+      </view>
+    </wxc-flex>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Search extends wepy.page {
+  config = {
+    navigationBarTitleText: '搜索',
+    usingComponents: {
+      'wxc-loading': '../../packages/@minui/wxc-loading/dist/index',
+      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
+      'wxc-search': '../../packages/@minui/wxc-search/dist/index',
+      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index'
+    }
+  }
+  data = {
+    message: 'Hello Logs!',
+    srarchValue: 'iphoneX',
+    searchList: []
+  }
+  methods = {
+    removeSearchStore(e) {
+      try {
+        let self = this
+        self.searchList = []
+        self.$apply()
+        wepy.removeStorageSync('srarchValue')
+      } catch (e) {
+      }
+    },
+    onInput(e) {
+      console.log(e)
+    },
+    oncaonima() {
+      console.log('1111')
+    },
+    onConfirm(e) {
+      let self = this
+      var searchVal = ''
+      var searchList = []
+      if (e.detail.value === '') {
+        searchVal = self.srarchValue
+      } else {
+        searchVal = e.detail.value
+      }
+      searchList.push({ searchvalue: searchVal })
+      try {
+        var value = wepy.getStorageSync('srarchValue')
+        if (value) {
+          for (var i = 0; i < value.length; i++) {
+            if (value[i].searchvalue !== searchVal) {
+              searchList.push({ searchvalue: value[i].searchvalue })
+            }
+          }
+          self.searchList = searchList
+          self.$apply()
+        }
+      } catch (e) {
+      }
+      try {
+        wepy.setStorageSync('srarchValue', searchList)
+      } catch (e) {
+      }
+      wepy.navigateTo({
+        'url': './goodlist',
+        success: function (res) {
+          console.log('跳转到news页面成功')// success
+        },
+        fail: function (res) {
+          console.log(res)  // fail
+        },
+        complete: function () {
+          console.log('跳转到news页面完成') // complete
+        }
+      })
+    }
+  }
+  onShow() {
+    let self = this
+    wepy.getStorage({
+      key: 'srarchValue',
+      success: function (res) {
+        self.searchList = res.data
+      }
+    })
+  }
+}
+</script>

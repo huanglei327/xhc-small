@@ -1,0 +1,128 @@
+<style lang="less">
+page {
+  background: #efefef;
+}
+.user-portrait {
+  width: 100%;
+  height: 150px;
+}
+.user-p-c {
+  width: 100px;
+  margin: 0 auto;
+}
+.user-photo {
+  height: 100px;
+}
+.user-photo-img {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+}
+.user-name {
+  text-align: center;
+  color: white;
+}
+.zan-col-a {
+  font-size: 24px;
+  color: #666;
+}
+.zan-row {
+  text-align: center;
+  font-size: 12px;
+}
+.zan-col-5,
+.zan-col-4 {
+  padding: 5px 0;
+}
+.m-t-5 {
+  margin-top: 10rpx;
+  color: #666;
+}
+</style>
+<template>
+  <view class="container">
+    <view class="user-portrait bg-fs">
+      <view class="user-p-c">
+        <view class="user-photo">
+          <!-- <image class="user-photo-img" src="{{userInfo.avatarUrl}}" height="150"/> -->
+        </view>
+        <!-- <view class="user-name">{{userInfo.nickName}}</view> -->
+        <view></view>
+      </view>
+    </view>
+    <view class="h-c-t">
+      <view style="margin-left:40rpx;">我的订单</view>
+    </view>
+    <view style="width:100%;background: white;">
+      <view class="zan-row">
+        <view class="zan-col zan-col-5">
+          <view class="zan-icon zan-icon-pending-payment zan-col-a"></view>
+          <view class="m-t-5">待付款</view>
+        </view>
+        <view class="zan-col zan-col-5">
+          <view class="zan-icon zan-icon-like-o zan-col-a"></view>
+          <view class="m-t-5">待分享</view>
+        </view>
+        <view class="zan-col zan-col-5">
+          <view class="zan-icon zan-icon-logistics zan-col-a"></view>
+          <view class="m-t-5">待发货</view>
+        </view>
+        <view class="zan-col zan-col-5">
+          <view class="zan-icon zan-icon-points-mall zan-col-a"></view>
+          <view class="m-t-5">待收货</view>
+        </view>
+        <view class="zan-col zan-col-4">
+          <view class="zan-icon zan-icon-records zan-col-a"></view>
+          <view class="m-t-5">待评价</view>
+        </view>
+      </view>
+    </view>
+    <view style="width:100%;">
+      <view class="zan-panel">
+        <view class="zan-cell zan-cell--access" bindtap="btn_address">
+          <view class="zan-icon zan-icon-pending-payment" style="color:#38f;"></view>
+          <view class="zan-cell__bd">收货地址</view>
+          <view class="zan-cell__ft"></view>
+        </view>
+        <view class="zan-cell zan-cell--access">
+          <view class="zan-cell__bd">官方客服</view>
+          <view class="zan-cell__ft"></view>
+        </view>
+        <view class="zan-cell zan-cell--access">
+          <view class="zan-cell__bd">设置</view>
+          <view class="zan-cell__ft"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class User extends wepy.page {
+  config = {
+    backgroundColor: '#333333',
+    navigationBarBackgroundColor: '#FFC1C1',
+    navigationBarTitleText: '我的'
+  };
+  data = {
+    message: '我的!',
+    userInfo: {}
+  }
+  methods = {
+    btn_address() {
+      wepy.chooseAddress({
+        success: function (res) {
+          console.log(JSON.stringify(res))
+        }
+      })
+    }
+  }
+  // onLoad() {
+  //   let self = this
+  //   self.userInfo = this.$parent.getUserInfo('')
+  //   console.log(self.userInfo.avatarUrl)
+  //   self.$apply()
+  // }
+}
+</script>

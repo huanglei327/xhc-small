@@ -1,0 +1,56 @@
+<style lang="less">
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+</style>
+<template>
+    <view class="container">
+        Address
+        {{message}}
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Address extends wepy.page {
+    config = {
+        navigationBarTitleText: 'login'
+    }
+    data = {
+        message: 'Hello Logs!'
+    }
+    methods = {
+
+    }
+    onLoad() {
+        let that = this 
+        console.log('---')
+        wepy.chooseAddress({
+            success: function (res) {
+                that.message = JSON.stringify(res)
+                console.log(JSON.stringify(res))
+                console.log(res.postalCode)
+                console.log(res.provinceName)
+                console.log(res.cityName)
+                console.log(res.countyName)
+                console.log(res.detailInfo)
+                console.log(res.nationalCode)
+                console.log(res.telNumber)
+            }
+        })
+    }
+}
+</script>

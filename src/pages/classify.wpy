@@ -1,0 +1,204 @@
+<style lang="less">
+.section {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+.left {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 180rpx;
+	background: #f6f6f6;
+	text-align: center;
+	font-size: 28rpx;
+}
+.left::before {
+	content: '';
+	position: absolute;
+	background: #dcdcdc;
+	right: 0;
+	top: 0;
+	height: 100%;
+}
+.left view.active {
+	background: #fff;
+	position: relative;
+	z-index: 2;
+	border-left: 3px solid red;
+}
+.left view {
+	display: block;
+	height: 90rpx;
+	line-height: 90rpx;
+	border-bottom: 0px solid #dcdcdc;
+	border-left: 3px solid #f6f6f6;
+}
+.right {
+	margin-left: 180rpx;
+	height: 100%;
+	overflow: hidden;
+	width: auto;
+	background: #fff;
+}
+.right text {
+	font-size: 24rpx;
+}
+.typeTree {
+	padding-top: 10px;
+	width: 100%;
+}
+.typeTree .item {
+	text-align: center;
+	display: inline-block;
+	vertical-align: top;
+}
+.typeTree .category {
+	flex-wrap: wrap;
+	overflow: hidden;
+	display: inline-block;
+	width: 30%;
+	margin-left: 6%;
+}
+.typeTree .title {
+	padding: 10px 0;
+	display: block;
+	color: #333;
+}
+.typeTree image {
+	width: 100px;
+	margin: 0 auto;
+}
+.typeTree .brand {
+	width: 33%;
+	float: left;
+	text-align: center;
+}
+.typeTree .category image {
+	height: 85px;
+}
+.typeTree .category {
+	padding-bottom: 10px;
+}
+.item text {
+	padding-bottom: 10px;
+	display: block;
+}
+.search-wrap {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 100rpx;
+	color: #fff;
+	background: white;
+	border-bottom: 1px solid #efefef;
+	font-size: 32rpx;
+}
+.search {
+	flex-grow: 1;
+	margin: 15rpx 24rpx;
+}
+.item image {
+	width: 120rpx;
+	height: 120rpx;
+}
+</style>
+<template>
+  <view class="page">
+    <view class="g_search">
+      <view class="search-wrap">
+        <wxc-search class="search" bindtap="url_search" size="40" radius="30" bg-color="#F6F6F6" color="white" ph-color="#999"></wxc-search>
+      </view>
+    </view>
+    <view class="section {{loading.isShow ? 'hidden' : ''}}" style="height:calc(100% - 104rpx)">
+      <scroll-view scroll-y="true" class="left">
+        <view wx:for="{{typeListA}}" wx:key="item.id" data-type-id="{{item.id}}" bindtap="bindtap" class="{{item.id == currType ? 'active' : ''}}">
+          {{item.categoryName}}
+        </view>
+         
+      </scroll-view>
+      <scroll-view scroll-y="true" class="right">
+        <view class="typeTree" wx:for="{{typeListA}}" WX:key="item.id" style="display:{{item.id == currType ? 'block' : 'none'}}">
+          <view class="brand" wx:for="{{typeListB}}" wx:for-item="gitem" wx:key="gitem.id" wx:if="{{gitem.parentId === item.id}}">
+            <navigator url="./shop/details?gid={{gitem.id}}" class="item">
+              <image src="{{gitem.picUrl}}" />
+              <text>{{gitem.categoryName}}</text>
+            </navigator>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    <view>
+      <wxc-loading is-show="{{loading.isShow}}" image="https://s10.mogucdn.com/mlcdn/c45406/170607_5241335cb37ka3ab7781ddh504ggh_200x200.png" slip="http://s10.mogucdn.com/p1/160715/upload_ifrgmmzwmyydknldhezdambqmeyde_200x200.png"></wxc-loading>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class ClassIfy extends wepy.page {
+  config = {
+    navigationBarTitleText: '分类',
+    usingComponents: {
+      'wxc-loading': '../../packages/@minui/wxc-loading/dist/index',
+      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
+      'wxc-search': '../../packages/@minui/wxc-search/dist/index',
+      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index'
+    }
+  }
+  data = {
+    loading: {
+      isShow: false
+    },
+    message: 'Hello Logs!',
+    currType: 1,
+    typeListA: [],
+    typeListB: []
+  }
+  methods = {
+    bindtap(e) {
+      let self = this
+      self.currType = e.currentTarget.dataset.typeId
+      self.$apply()
+    },
+    detailtap(e) {
+      console.log(e)
+    },
+    url_search() {
+      wepy.navigateTo({
+        'url': './shop/search'
+      })
+    },
+    filterList1(list) {
+      let typeList = []
+      list.map((item) => {
+        if (item.parentId === 0) {
+          typeList.push(item)
+        }
+      })
+      return typeList
+    },
+    filterList2(list) {
+      let typeList = []
+      list.map((item) => {
+        if (item.parentId !== 0) {
+          typeList.push(item)
+        }
+      })
+      return typeList
+    }
+  }
+  onLoad() {
+    let that = this
+    that.loading.isShow = true
+    this.$parent.getGet('/XhcCategory/GetAll', {}, function (response) {
+      that.loading.isShow = false
+      that.typeListA = response.typeList1
+      that.typeListB = response.typeList2
+      that.$apply()
+    })
+  }
+}
+</script>

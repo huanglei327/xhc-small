@@ -1,0 +1,239 @@
+<style lang="less">
+ .foot-absolute{
+     width: 100%;
+     position: fixed;
+     bottom: 0;
+     border-top:1px solid #999
+  }
+  .foot-absolute .zan-row{
+     text-align: center;
+     background:white;
+  }
+   .foot-absolute .zan-row .zan-col{
+     height: 47px;
+     line-height:47px;
+   }
+   .check-wrap {
+    position: relative;
+    width: 40rpx;
+    height: 40rpx;
+    border-radius: 100%;
+    border: 1px solid #d8d8d8;
+  }
+  .check {
+    position: absolute;
+    top: 0;
+    left: -2rpx;
+    width: 100%;
+    height: 100%;
+    line-height: 42rpx;
+  }
+ .carts{
+   padding-bottom: 47px;
+ }
+  .wrap {
+    display: block;
+    height: 200rpx;
+  }
+  .item {
+    font-size: 20rpx;
+  }
+  .item_check {
+    width: 50rpx;
+    flex-grow: 0;
+    padding-left: 40rpx;
+  }
+  .main {
+    font-size:28rpx;
+    flex-grow: 1;
+  }
+   .item_image {
+    width: 180rpx;
+    height: 180rpx;
+    margin: 10rpx;
+    flex-grow: 0;
+    position: relative;
+}
+ 
+.item_price{
+   width: 100rpx;
+    flex-grow: 0;
+}
+</style>
+<template>
+<view>
+    <view class="carts">
+      <block  wx:for="{{carts}}" wx:key="{{index}}" wx:item="item">
+         <wxc-flex class="wrap" main="center" cross="center">
+            <view class=" item item_check">
+              <view class="check-wrap" bindtap="onIsSelect" data-shopid="{{index}}" data-index="{{index}}">
+                <wxc-icon wx:if="{{item.isSelect}}" class="check" type="check" size="46" color="#ff5777"></wxc-icon>
+              </view>
+            </view>
+            <view class="item">
+              <image class="item_image" src="{{item.pic}}"/>
+            </view>
+            <view class="item main">
+              <view>{{item.name}}</view>
+              <view class="f-bt">颜色：路白条；尺码：L；</view>
+              <view>
+                 <wxc-flex style="height:80rpx;line-height:80rpx;" main="center" cross="center">
+                  <view style="width:50%;">{{item.price}}</view>
+                <view style="width:50%;">
+                  <wxc-counter 
+                  data-shopid="{{index}}"
+                  number="{{item.count.quantity}}"  
+                  max="{{item.count.max}}" 
+                  min="{{item.count.min}}" 
+                  bind:changenumber="onChangeNumber"></wxc-counter>
+                  </view>
+              </wxc-flex>
+              </view>
+             
+            </view>
+          </wxc-flex>
+      </block>
+    </view>
+   <view class="foot-absolute">
+       <view class="zan-row">
+        <view class="zan-col zan-col-10">
+          <view class="check-wrap" bindtap="onCheck" style="margin-left:40rpx;margin-top:15px;">
+            <wxc-icon wx:if="{{check}}" class="check" type="check" size="46" color="#ff5777"></wxc-icon>
+             
+          </view>
+        </view>
+        <view class="zan-col zan-col-6">
+           <view class="size14">{{total}}</view>
+        </view>
+        <view class="zan-col zan-col-8">
+           <wxc-button size="normal" type="beauty" value="结算"></wxc-button>
+        </view>
+      </view>
+   </view>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class ShopCart extends wepy.page {
+    config = {
+      navigationBarTitleText: '购物车',
+      usingComponents: {
+        'wxc-button': '../../packages/@minui/wxc-button/dist/index',
+        'wxc-list': '../../packages/@minui/wxc-list/dist/index',
+        'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
+        'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
+        'wxc-counter': '../../packages/@minui/wxc-counter/dist/index'
+      }
+    }
+    data = {
+      check: false,
+      total: 0.0,
+      items: [{
+        name: 'USA', value: '美国'
+      }, {name: 'CHN', value: '中国', checked: 'true'
+      }, {name: 'BRA', value: '巴西'
+      }, {name: 'JPN', value: '日本'
+      }, {name: 'ENG', value: '英国'
+      }, {name: 'TUR', value: '法国'
+      }],
+      carts: [{
+        pic: 'http://mz.djmall.xmisp.cn/files/product/20161201/148058328876.jpg',
+        name: '日本资生堂洗颜',
+        price: 0.01,
+        isSelect: false,
+        count: {
+          quantity: 2,
+          min: 1,
+          max: 20
+        }
+      }, {
+        pic: 'http://mz.djmall.xmisp.cn/files/product/20161201/148058301941.jpg',
+        name: '倩碧焕妍活力精华露',
+        price: 0.02,
+        isSelect: false,
+        count: {
+          quantity: 1,
+          min: 1,
+          max: 20
+        }
+      }, {
+        pic: 'http://mz.djmall.xmisp.cn/files/product/20161201/14805828016.jpg',
+        name: '特效润肤露',
+        price: 0.03,
+        isSelect: false,
+        count: {
+          quantity: 3,
+          min: 1,
+          max: 20
+        }
+      }, {
+        pic: 'http://mz.djmall.xmisp.cn/files/product/20161201/148058228431.jpg',
+        name: '倩碧水嫩保湿精华面霜',
+        price: 0.04,
+        isSelect: false,
+        count: {
+          quantity: 1,
+          min: 1,
+          max: 20
+        }
+      }, {
+        pic: 'http://mz.djmall.xmisp.cn/files/product/20161201/148057953326.jpg',
+        name: '兰蔻清莹柔肤爽肤水',
+        price: 0.05,
+        isSelect: false,
+        count: {
+          quantity: 10,
+          min: 1,
+          max: 20
+        }
+      }, {
+        pic: 'http://mz.djmall.xmisp.cn/files/product/20161201/148057921620_middle.jpg',
+        name: 'LANCOME兰蔻小黑瓶精华',
+        price: 0.06,
+        isSelect: false,
+        count: {
+          quantity: 1,
+          min: 1,
+          max: 20
+        }
+      }]
+    }
+    methods = {
+      onIsSelect (e) {
+        let shopid = e.currentTarget.dataset.shopid
+        this.carts[shopid].isSelect = !this.carts[shopid].isSelect
+        this.methods.alculationAmount(this)
+      },
+      onCheck() {
+        let that = this
+        that.check = !that.check
+        for (var i = 0; i < that.carts.length; i++) {
+          if (that.check) {
+            that.carts[i].isSelect = true
+          } else {
+            that.carts[i].isSelect = false
+          }
+        }
+        this.methods.alculationAmount(this)
+      },
+      checkboxChange: function(e) {
+        console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+      },
+      onChangeNumber (e) {
+        let shopid = e.currentTarget.dataset.shopid
+        this.carts[shopid].count.quantity = e.detail.number
+        this.methods.alculationAmount(this)
+      },
+      alculationAmount (that) {
+        let numA = 0.0
+        for (var i = 0; i < that.carts.length; i++) {
+          if (that.carts[i].isSelect) {
+            numA += that.carts[i].price * that.carts[i].count.quantity
+          }
+        }
+        that.total = numA.toFixed(2)
+      }
+    }
+  }
+</script>
